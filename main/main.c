@@ -189,11 +189,15 @@ static void main_application_task(void *pvParameters)
 {
     uint8_t counter = 0;
 
+    gpio_pad_select_gpio(GPIO_NUM_2);
+    gpio_set_direction(GPIO_NUM_2, GPIO_MODE_OUTPUT);
+
     while (1)
     {
         xEventGroupWaitBits(event_group, OTA_TASK_IN_NORMAL_STATE_EVENT, false, true, portMAX_DELAY);
 
-        counter = counter < 1 ? counter + 1 : 0;
+        counter = counter < 3 ? counter + 1 : 0;
+        gpio_set_level(GPIO_NUM_2, counter & 1);
 
         cJSON *root = cJSON_CreateObject();
         cJSON_AddNumberToObject(root, "counter", counter);
